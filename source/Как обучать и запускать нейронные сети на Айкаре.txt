@@ -1,5 +1,0 @@
-Как обучить YOLO4-tiny в darknet(установлен на ваших компьютерах)
-https://docs.google.com/document/d/1FYwTO3h-Uqxn8TazKL5V8yGhjXamm3fHKfP5ZAGebwI/edit#
-
-Как запустить YOLO на NPU АЙКАР
-https://docs.google.com/document/d/15Moxk507-WVLlC9EZLCzPKR-rKQUWeCK0b-UIpBHdWQ
