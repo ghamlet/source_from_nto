@@ -29,15 +29,15 @@ _CROSS_LEFT_STRAIGHT_AGAIN = '_CROSS_LEFT_STRAIGHT_AGAIN'
 PREV_SUBSTATE = None
 SUBSTATE = None
 
-PD_UP = 0.4
-PD_DOWN = 0.15
-PD_H = 0.65
-PD_H_INV = 1 - PD_H
-X_OFFSET = 0
-Y_OFFSET = 0
-WIDTH_COEFF = 0
+# PD_UP = 0.4
+# PD_DOWN = 0.15
+# PD_H = 0.65
+# PD_H_INV = 1 - PD_H
+# X_OFFSET = 0
+# Y_OFFSET = 0
+# WIDTH_COEFF = 0
 
-ON_CROSS = CROSS_RIGHT
+#ON_CROSS = CROSS_RIGHT
 
 START_ACTION = False
 
@@ -70,10 +70,12 @@ for i in range(30):
 last_err = 0
 ped_log_state_prev = None
 last_ped = 0
+
+
 while True:
-    start_time = time.time()
+    # start_time = time.time()
     ret, frame = cap.read()
-    end_frame = time.time()
+    # end_frame = time.time()
     if not ret:
         break
     
@@ -88,17 +90,22 @@ while True:
     
     left, right = find_lines(wrapped)
     
+
+    #ДАННАЯ ТЕМА ПРИМЕНЯЕТСЯ ДЛЯ ПРЕОДОЛЕНИЯ ПЕРЕКРЕСТКОВ В ЗАДАННОМ ПОРЯДКЕ, ПОЭТОМУ ОБНОВЛЯЕМ ПЕРЕМЕННУЮ START_ACTION НА ПРЯМОМ УЧАСТКЕ ДОРОГИ
+
     # --- GO RIGHT --- #
     if STATE == CROSS_RIGHT:
         if not START_ACTION and not find_lines.left_found:
             START_ACTION = True
         
     if STATE == CROSS_RIGHT and START_ACTION:
-        left = int(right - wrapped.shape[1] * 0.6)
-
+        left = int(right - wrapped.shape[1] * 0.6) #создаем мнимую линию
+        #Если во время поворота обнаружили что вернулись на прямой участок
         if detect_return_road(wrapped, find_lines.left_side_amount, find_lines.right_side_amount):
             STATE = GO
     # --- GO RIGHT END --- #
+
+
 
     # --- GO STRAIGHT --- #
     if STATE == CROSS_STRAIGHT:
@@ -195,9 +202,8 @@ while True:
     
     if STATE == GO and detect_stop2(wrapped):
         START_ACTION = False
-        #STATE = ON_CROSS
         #STATE = random.choice([CROSS_RIGHT, CROSS_STRAIGHT, CROSS_LEFT])
-        STATE = CROSS_LEFT
+        STATE = CROSS_STRAIGHT
     
     if PREV_STATE != STATE or PREV_SUBSTATE != SUBSTATE:
         print(f'STATE: {STATE} ({SUBSTATE})')
@@ -210,9 +216,9 @@ while True:
     else:
         arduino.stop()
 
-    end_time = time.time()
+    # end_time = time.time()
 
-    fps = 1/(end_time-start_time)
-    if fps < 10:
-        print(f'[WARNING] FPS is too low! ({fps:.1f} fps)')
+    # fps = 1/(end_time-start_time)
+    # if fps < 10:
+    #     print(f'[WARNING] FPS is too low! ({fps:.1f} fps)')
 
