@@ -4,6 +4,7 @@ import numpy as np
 cap = cv2.VideoCapture("source_from_nto/BaseCode/area.mp4")
 minb, ming, minr, maxb, maxg, maxr = 22, 67, 96, 255, 255, 255
 AREA  = False
+once = True
 
 while True:
     ret, frame = cap.read()
@@ -14,7 +15,15 @@ while True:
 
     hist = np.sum(mask, axis=1)
     maxStrInd = np.argmax(hist)
-    print(hist[maxStrInd]//255)
+    ind = hist[maxStrInd]//255
+
+    if ind > 300 and once:
+        AREA = True
+        once = False
+
+        
+    else:  AREA = False
+    print(AREA)
     #hist = np.sum(mask)
     # print(hist)
     # if hist > 28303725:
@@ -29,9 +38,9 @@ while True:
    
 
     cv2.imshow('result1', result)
-    cv2.imshow('frame_input', frame)
-    cv2.imshow('mask', mask)
-    k = cv2.waitKey(10)
+    #cv2.imshow('frame_input', frame)
+    #cv2.imshow('mask', mask)
+    k = cv2.waitKey(100)
     if k == ord('q'):
         break
    

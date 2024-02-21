@@ -10,6 +10,10 @@ import numpy as np
 from arduino import Arduino
 from road_utils import *
 
+minb, ming, minr, maxb, maxg, maxr = 22, 67, 96, 255, 255, 255
+AREA  = False
+once = True
+
 
 DIST_METER = 1825  # ticks to finish 1m
 CAR_SPEED = 1600
@@ -81,6 +85,24 @@ while True:
     
     orig_frame = frame.copy()
     unloading_area = frame.copy()
+
+    hsv = cv2.cvtColor(unloading_area, cv2.COLOR_BGR2HSV)
+    mask = cv2.inRange(hsv,(minb,ming,minr),(maxb,maxg,maxr))
+
+    hist = np.sum(mask, axis=1)
+    maxStrInd = np.argmax(hist)
+    ind = hist[maxStrInd]//255
+
+    if ind > 300 and once:
+        AREA = True
+        print("Area:stop")
+        STATE = STOP
+        once = False
+
+        
+    else:  AREA = False
+    
+
     frame = cv2.resize(frame, SIZE)
 
     bin = binarize(frame, THRESHOLD)
