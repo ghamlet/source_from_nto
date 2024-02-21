@@ -204,7 +204,7 @@ while True:
     if STATE == GO and detect_stop2(wrapped):
         START_ACTION = False
         #STATE = random.choice([CROSS_RIGHT, CROSS_STRAIGHT, CROSS_LEFT])
-        STATE = CROSS_STRAIGHT
+        STATE = CROSS_RIGHT
     
     if PREV_STATE != STATE or PREV_SUBSTATE != SUBSTATE:
         print(f'STATE: {STATE} ({SUBSTATE})')

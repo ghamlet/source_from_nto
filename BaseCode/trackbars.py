@@ -2,7 +2,7 @@ import cv2
 import os
 import numpy as np
 
-minblue, mingreen, minred, maxblue, maxgreen, maxred = 0, 0, 0, 255, 255, 255
+minblue, mingreen, minred, maxblue, maxgreen, maxred = 22, 67, 96, 255, 255, 255
 
 change_image = False
 
@@ -29,7 +29,7 @@ def trackbar(minblue=0, mingreen=0, minred=0, maxblue=0, maxgreen=0, maxred=0):
     change_image = True
 
 
-cap = cv2.VideoCapture("BaseCode/video_2024-02-21_01-35-52.mp4")
+cap = cv2.VideoCapture("source_from_nto/BaseCode/area.mp4")
 
 while True:
     res, frame_input =  cap.read()
