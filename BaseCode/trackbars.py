@@ -29,7 +29,7 @@ def trackbar(minblue=0, mingreen=0, minred=0, maxblue=0, maxgreen=0, maxred=0):
     change_image = True
 
 
-cap = cv2.VideoCapture("source_from_nto/BaseCode/document_5381855044230463496.mp4")
+cap = cv2.VideoCapture(0)
 
 while True:
     res, frame_input =  cap.read()

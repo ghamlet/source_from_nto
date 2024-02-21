@@ -16,7 +16,7 @@ once = True
 
 
 DIST_METER = 1825  # ticks to finish 1m
-CAR_SPEED = 1600
+CAR_SPEED = 1630
 THRESHOLD = 200
 CAMERA_ID = '/dev/video0'
 ARDUINO_PORT = '/dev/ttyUSB0'
@@ -54,7 +54,7 @@ time.sleep(2)
 print("Arduino port:", arduino.port)
 
 
-# cap = find_camera(fourcc="MJPG", frame_width=1280, frame_height=720)
+#cap = find_camera(fourcc="MJPG", frame_width=1280, frame_height=720)
 cap = cv2.VideoCapture(CAMERA_ID, cv2.CAP_V4L2)
 cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
@@ -86,6 +86,35 @@ while True:
     orig_frame = frame.copy()
     unloading_area = frame.copy()
 
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    mask = cv2.inRange(hsv,(0,144,230),(207,255,255))
+        
+    low_ind = ((mask.shape[0] )//4)*3
+    print(np.sum(mask[low_ind:mask.shape[0]]))
+
+
+
+    hist = np.sum(mask, axis=1)
+    maxStrInd = np.argmax(hist)
+    ind = hist[maxStrInd] // 255
+    
+
+    cv2.line(frame, (0, maxStrInd), (frame.shape[1], maxStrInd), 60, 4)
+
+
+    if (ind > 310) and once:
+        AREA = True
+        once = False
+        
+    elif (ind > 310) and AREA:
+        STATE = STOP
+        print(ind)
+        #once = False
+       
+
+
+ 
+
     hsv = cv2.cvtColor(unloading_area, cv2.COLOR_BGR2HSV)
     mask = cv2.inRange(hsv,(minb,ming,minr),(maxb,maxg,maxr))
 
@@ -100,7 +129,7 @@ while True:
         once = False
 
         
-    else:  AREA = False
+    
     
 
     frame = cv2.resize(frame, SIZE)
@@ -214,7 +243,7 @@ while True:
     # --- GO LEFT END --- #
 
     err = 0-((left + right) // 2 - wrapped.shape[1] // 2)
-    angle = int(90 + KP * err + KD * (err - last_err)) # EXPERIMENT 90 -> 85
+    angle = int(100 + KP * err + KD * (err - last_err)) # EXPERIMENT 90 -> 85
     last_err = err
     
     if STATE == _CROSS_LEFT_LEFT:
